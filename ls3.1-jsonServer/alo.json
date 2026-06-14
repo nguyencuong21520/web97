@@ -42,7 +42,7 @@
       "id": "p001",
       "name": "Điện thoại",
       "price": 7000000,
-      "quantity": 100
+      "quantity": 98
     },
     {
       "id": "p002",
@@ -145,6 +145,13 @@
       "productId": "p004",
       "quantity": 5,
       "totalPrice": 2500000
+    },
+    {
+      "id": "d3657891-eaa8-4e0c-8a85-8a0afc41578e",
+      "customerId": "c001",
+      "productId": "p001",
+      "quantity": 2,
+      "totalPrice": 14000000
     }
   ]
 }
