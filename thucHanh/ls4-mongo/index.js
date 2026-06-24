@@ -1,6 +1,9 @@
 import express from "express"
 import connectDB from "./src/configs/db.js"
 import authRoute from "./src/routers/auth.route.js"
+import productRoute from "./src/routers/product.route.js"
+
+import authMiddleWare from "./src/middlewares/auth.middleware.js"
 
 const app = express()
 const PORT = 3030
@@ -14,6 +17,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/auth", authRoute)
+app.use("/products", authMiddleWare.authen, authMiddleWare.authoz(['ADMIN', 'MANH']), productRoute)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
