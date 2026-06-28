@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import bcrypt from "bcrypt";
 
 
 const authController = {
@@ -8,9 +9,14 @@ const authController = {
             if (!email || !password) {
                 return res.status(400).json({ message: "Missing required fields" });
             }
-            const user = await User.findOne({ email, password });
+            const user = await User.findOne({ email });
             if (!user) {
                 return res.status(404).json({ message: "Invalid credentials" });
+            }
+
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) {
+                return res.status(401).json({ message: "Invalid credentials" });
             }
 
             const token = `MINDX-${user._id}-${user.role}-${Date.now().toString()}`
@@ -30,7 +36,11 @@ const authController = {
             if (user) {
                 return res.status(400).json({ message: "A user with this email already exists" });
             }
-            const newUser = await User.create({ userName, password, email, role });
+
+            const salt = bcrypt.genSaltSync(10);
+            const hashPassword = bcrypt.hashSync(password, salt);
+
+            const newUser = await User.create({ userName, password: hashPassword, email, role, salt });
             return res.status(201).json({ message: "User created successfully", user: newUser });
         } catch (error) {
             return res.status(500).json({ message: error.message });
