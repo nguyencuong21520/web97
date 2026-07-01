@@ -1,5 +1,8 @@
 import UserModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 const authController = {
     login: async (req, res) => {
@@ -13,10 +16,17 @@ const authController = {
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid password" });
         }
+
+        const userInfo = {
+            userId: user._id,
+            role: user.role,
+        }
+
+        const token = jwt.sign(userInfo, process.env.JWT_SECRET, { expiresIn: "1h" });
         return res.json({
             message: "Login success",
             user,
-            token: `MINDX_`
+            token
         });
 
     },

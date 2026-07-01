@@ -16,7 +16,7 @@ connectDB();
 app.use(express.json());
 app.use(logInfo)
 
-app.use("/users", authMiddleware.authentication, userRouter)
+app.use("/users", authMiddleware.authentication, authMiddleware.authorization("ADMIN"), userRouter)
 app.use("/products", authMiddleware.authentication, productRouter)
 app.use("/auth", authRouter)
 
