@@ -1,24 +1,30 @@
+import jwt from "jsonwebtoken";
+
 const authMiddleWare = {
     authen: (req, res, next) => {
-        const token = req.headers?.authorization;
+        let token = req.headers?.authorization;
         if (!token) {
             return res.status(401).json({ message: "Missing token" });
         }
-        const [signature, userId, userRole, time] = token.split('-');
 
-        if (signature !== 'MINDX') {
-            return res.status(401).json({ message: "Invalid token" });
+        if (token.startsWith("Bearer ")) {
+            token = token.slice(7);
         }
 
-        req.user = { userId, userRole };
-        next();
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET || "mindx_secret_key_2026");
+            req.user = { userId: decoded.userId, userRole: decoded.userRole };
+            next();
+        } catch (error) {
+            return res.status(401).json({ message: "Invalid token" });
+        }
     },
     authoz: (roleAccept) => (req, res, next) => {
-        if (!roleAccept.includes(req.user.userRole)) {
+        if (!req.user || !roleAccept.includes(req.user.userRole)) {
             return res.status(403).json({ message: "Unauthorized" });
         }
         next();
     }
 }
 
-export default authMiddleWare
+export default authMiddleWare;

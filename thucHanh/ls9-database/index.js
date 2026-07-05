@@ -17,6 +17,9 @@ app.get("/", (req, res) => {
     res.status(200).json({ message: "Welcome to My API" })
 })
 
+app.use("/auth", authRoute)
+app.use("/products", productRoute)
+app.use("/orders", orderRoute)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
