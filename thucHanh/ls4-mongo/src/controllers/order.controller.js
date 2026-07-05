@@ -1,5 +1,6 @@
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
+import Customer from "../models/customer.model.js";
 
 const orderController = {
     getOrderByUser: async (req, res) => {
@@ -38,6 +39,14 @@ const orderController = {
             //update product quantity
             await product.updateOne({ $inc: { quantity: -quantity } })
             return res.status(201).json({ message: "Order created successfully", order: newOrder });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    },
+    getAllOrder: async (req, res) => {
+        try {
+            const orders = await Order.find().populate("customerId").populate("productId");
+            return res.status(200).json({ message: "Orders fetched successfully", orders });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
