@@ -3,6 +3,7 @@ import connectDB from "./src/configs/db.js"
 import authRoute from "./src/routers/auth.route.js"
 import productRoute from "./src/routers/product.route.js"
 import orderRoute from "./src/routers/order.route.js"
+import fileRouter from "./src/routers/file.route.js"
 
 import authMiddleWare from "./src/middlewares/auth.middleware.js"
 
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoute)
 app.use("/products", productRoute)
 app.use("/orders", orderRoute)
+app.use("/file", authMiddleWare.authen, fileRouter)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
