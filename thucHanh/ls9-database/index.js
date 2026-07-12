@@ -19,9 +19,9 @@ app.get("/", (req, res) => {
 })
 
 app.use("/auth", authRoute)
-app.use("/products", productRoute)
 app.use("/orders", orderRoute)
 app.use("/file", authMiddleWare.authen, fileRouter)
+app.use("/products", productRoute)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
